@@ -1,0 +1,7 @@
+.env
+data
+exports
+node_modules
+*.log
+reference
+preview-*.png

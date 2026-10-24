@@ -2,6 +2,12 @@
 
 A self-contained, earthy visual edition of the supplied AI Influencer Playbook, positioned as a $50 educational product.
 
+## Patient Creations funnel
+
+The [funnel application](funnel/README.md) includes a landing page, two-step qualification form, persistent lead storage, booking handoff and free downloads. It runs on Node.js 24 without external packages. Follow-up integrations can be connected later. GitHub stores the source; the server needs hosting before customers can use it.
+
+[Download the funnel application](Patient-Creations-Funnel.zip).
+
 ## Download
 
 - [Download the PDF](Deeper-Not-Bigger-Playbook.pdf)
