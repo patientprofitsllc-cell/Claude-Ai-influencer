@@ -63,7 +63,7 @@ export function createApp(options={}){
   const timer=setInterval(()=>{const now=Date.now();for(const [key,value] of limits)if(value.until<now)limits.delete(key);void dispatch().catch(()=>console.error('Automation queue unavailable'));},30000);timer.unref();
   const security={'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",'Cache-Control':'no-store'};
   const json=(res,status,data)=>{res.writeHead(status,{...security,'Content-Type':'application/json'});res.end(JSON.stringify(data));};
-  const staticFiles=new Map([['/','index.html'],['/app.js','app.js'],['/style.css','style.css'],['/privacy','privacy.html'],['/resources','resources.html'],['/downloads/visibility-checklist.txt','visibility-checklist.txt'],['/downloads/content-planner.csv','content-planner.csv']]);
+  const staticFiles=new Map([['/','index.html'],['/app.js','app.js'],['/style.css','style.css'],['/hero.webp','hero.webp'],['/hero-720.webp','hero-720.webp'],['/privacy','privacy.html'],['/resources','resources.html'],['/downloads/visibility-checklist.txt','visibility-checklist.txt'],['/downloads/content-planner.csv','content-planner.csv']]);
   const server=http.createServer(async(req,res)=>{
     try{
       const url=new URL(req.url,'http://localhost');
@@ -93,8 +93,9 @@ export function createApp(options={}){
       if(req.method!=='GET'&&req.method!=='HEAD')return json(res,405,{error:'Method not allowed.'});
       const file=staticFiles.get(url.pathname)||(industries.some(i=>url.pathname===`/grow-${i}`)?'index.html':null);
       if(!file)return json(res,404,{error:'Page not found.'});
-      const ext=path.extname(file),types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.txt':'text/plain; charset=utf-8','.csv':'text/csv; charset=utf-8'};
+      const ext=path.extname(file),types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.txt':'text/plain; charset=utf-8','.csv':'text/csv; charset=utf-8','.webp':'image/webp'};
       const headers={...security,'Content-Type':types[ext]};
+      if(ext==='.webp')headers['Cache-Control']='public, max-age=604800';
       if(url.pathname.startsWith('/downloads/'))headers['Content-Disposition']=`attachment; filename="${file}"`;
       res.writeHead(200,headers);res.end(req.method==='HEAD'?undefined:readFileSync(path.join(here,'public',file)));
     }catch{if(!res.headersSent)json(res,500,{error:'We could not save your request. Please try again.'});else res.end();}
